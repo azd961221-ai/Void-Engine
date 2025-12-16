@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Void Engine</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<aside class="sidebar">
+    <div class="engine-title">VOID</div>
+    <div class="engine-subtitle">Game Engine Hub</div>
+
+    <div class="stats">
+        <div><b id="totalCount">0</b> projects</div>
+        <div><b id="count2D">0</b> 2D</div>
+        <div><b id="count3D">0</b> 3D</div>
+    </div>
+
+    <button class="create-btn" id="createProjectBtn">＋ New Project</button>
+</aside>
+
+<main class="main">
+
+    <section class="hero">
+        <div class="hero-text">
+            <h1>Project Hub</h1>
+            <p>Create and manage your games</p>
+        </div>
+
+        <div class="hero-actions">
+            <button class="hero-btn primary" id="heroCreateBtn">
+                Create Project
+            </button>
+            <button class="hero-btn ghost" id="openLastBtn">
+                Open Last
+            </button>
+        </div>
+    </section>
+
+    <section class="toolbar">
+        <input id="searchInput" placeholder="Search project...">
+        <select id="sortSelect">
+            <option value="date">Recent</option>
+            <option value="name">Name</option>
+        </select>
+    </section>
+
+    <section class="projects-section">
+        <h2>Projects</h2>
+        <div class="projects-grid" id="projectsGrid"></div>
+
+        <div class="empty-state" id="emptyState">
+            <h3>No projects</h3>
+            <p>Create your first project</p>
+        </div>
+    </section>
+
+</main>
+
+<!-- MODAL -->
+<div class="modal" id="modal">
+    <div class="modal-box">
+        <h3>New Project</h3>
+
+        <label>Name</label>
+        <input id="projectName">
+
+        <label>Type</label>
+        <select id="projectType">
+            <option>2D</option>
+            <option>3D</option>
+        </select>
+
+        <label>Platform</label>
+        <select id="projectPlatform">
+            <option>Web</option>
+            <option>Desktop</option>
+            <option>Mobile</option>
+        </select>
+
+        <label>Resolution</label>
+        <div class="size-row">
+            <input id="canvasWidth" type="number" value="1280">
+            <input id="canvasHeight" type="number" value="720">
+        </div>
+
+        <div class="modal-actions">
+            <button class="btn cancel" id="cancelBtn">Cancel</button>
+            <button class="btn confirm" id="confirmBtn">Create</button>
+        </div>
+    </div>
+</div>
+
+<script src="js/storage.js"></script>
+<script src="js/ui.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>

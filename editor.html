@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <title>Void Editor</title>
+  <link rel="stylesheet" href="css/editor.css" />
+</head>
+<body>
+
+<header class="top-bar">
+  <div class="menu">
+    <span>File</span>
+    <span>Edit</span>
+    <span>Project</span>
+    <span>Build</span>
+  </div>
+
+  <div class="top-project-name" id="editorProjectName">Project</div>
+
+  <div class="top-actions">
+    <button class="top-btn" id="btnSaveScene" title="Save scene (localStorage)">💾 Save</button>
+    <button class="top-btn" id="btnSaveAs" title="Save project to device (Save As / JSON)">⬇ Save As…</button>
+    <button class="top-btn" id="btnExport" title="Export JSON (download)">Export</button>
+    <button class="top-btn" id="btnImport" title="Import JSON">Import</button>
+    <input id="importFile" type="file" accept="application/json" hidden />
+
+    <div class="toolgroup-top">
+      <span class="snap-label">Grid</span>
+      <select id="gridSnapSelect" class="snap-select" title="Grid size">
+        <option value="10">10</option>
+        <option value="25">25</option>
+        <option value="50" selected>50</option>
+        <option value="100">100</option>
+      </select>
+    </div>
+
+    <div class="play-controls">
+      <button class="icon-btn" title="Play (Game tab)">▶</button>
+      <button class="icon-btn" title="Pause">⏸</button>
+      <button class="icon-btn" title="Stop">■</button>
+    </div>
+  </div>
+</header>
+
+<div class="editor" id="editorRoot">
+
+  <!-- LEFT: HIERARCHY -->
+  <aside class="panel hierarchy">
+    <div class="panel-header">
+      <span>Hierarchy</span>
+      <button class="mini-btn" id="addEntityBtn" title="Add entity">＋</button>
+    </div>
+
+    <div class="panel-content">
+      <input class="panel-search" id="hierarchySearch" placeholder="Search..." />
+      <div class="hierarchy-list" id="hierarchyList"></div>
+    </div>
+  </aside>
+
+  <div class="resizer" id="resizerLeft" title="Drag to resize"></div>
+
+  <!-- CENTER -->
+  <main class="center">
+    <div class="center-topbar">
+      <div class="tabs" id="viewTabs">
+        <button class="tab active" data-tab="scene">Scene</button>
+        <button class="tab" data-tab="game">Game</button>
+      </div>
+
+      <div class="toolstrip">
+        <div class="toolgroup">
+          <button class="toolbtn active" id="btnGizmoMove" title="Move (W)">Move</button>
+          <button class="toolbtn" id="btnGizmoRotate" title="Rotate (E)">Rotate</button>
+          <div class="divider"></div>
+          <button class="toolbtn" id="btnSpace" title="Toggle gizmo space (Q)">World</button>
+        </div>
+
+        <div class="toolhint">
+          Q: Local/World • W/E: Gizmo • Ctrl: Snap • Ctrl+Z/Y: Undo/Redo • Wheel: Zoom • RMB / Space+LMB: Pan
+        </div>
+      </div>
+    </div>
+
+    <section class="viewport-wrap">
+      <!-- SCENE VIEW -->
+      <div class="viewport active" id="sceneViewport">
+        <div class="scene-view">
+          <canvas id="sceneCanvas"></canvas>
+
+          <div class="hud">
+            <div class="hud-chip" id="hudZoom">Zoom: 100%</div>
+            <div class="hud-chip" id="hudCam">Cam: 0, 0</div>
+            <div class="hud-chip" id="hudSel">Selected: —</div>
+            <div class="hud-chip" id="hudMode">Gizmo: Move</div>
+            <div class="hud-chip" id="hudSpace">Space: World</div>
+            <div class="hud-chip" id="hudSnap">Snap: 50</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- GAME VIEW -->
+      <div class="viewport" id="gameViewport">
+        <div class="game-placeholder">
+          <div class="game-title">Game View</div>
+          <div class="game-text">Позже тут будет runtime / play mode.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- BOTTOM: CONSOLE -->
+    <section class="bottom-dock">
+      <div class="dock-tabs">
+        <button class="dock-tab active">Console</button>
+      </div>
+
+      <div class="dock-body">
+        <div class="console-toolbar">
+          <button class="small-top-btn" id="btnClearConsole">Clear</button>
+        </div>
+        <div class="console-list" id="consoleList"></div>
+      </div>
+    </section>
+  </main>
+
+  <div class="resizer" id="resizerRight" title="Drag to resize"></div>
+
+  <!-- RIGHT: INSPECTOR -->
+  <aside class="panel inspector">
+    <div class="panel-header"><span>Inspector</span></div>
+
+    <div class="panel-content" id="inspectorRoot">
+      <div class="empty-inspector" id="emptyInspector">
+        <div class="empty-title">No selection</div>
+        <div class="empty-text">Select an entity in the Hierarchy</div>
+      </div>
+
+      <div class="inspector-body hidden" id="inspectorBody">
+        <div class="inspector-block">
+          <div class="block-title">Selection</div>
+          <div class="multi-note" id="multiNote"></div>
+        </div>
+
+        <div class="inspector-block">
+          <div class="block-title">Entity</div>
+
+          <div class="field">
+            <label>Name</label>
+            <input id="inpName" />
+          </div>
+
+          <div class="field">
+            <label>Tag</label>
+            <input id="inpTag" placeholder="Untagged" />
+          </div>
+
+          <div class="field">
+            <label>Enabled</label>
+            <select id="inpEnabled">
+              <option value="true">True</option>
+              <option value="false">False</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="inspector-block">
+          <div class="block-title">Transform</div>
+
+          <div class="field">
+            <label>X</label>
+            <input id="inpX" type="number" step="1" />
+          </div>
+
+          <div class="field">
+            <label>Y</label>
+            <input id="inpY" type="number" step="1" />
+          </div>
+
+          <div class="field">
+            <label>Rotation</label>
+            <input id="inpRot" type="number" step="1" />
+          </div>
+
+          <div class="field">
+            <label>Scale</label>
+            <input id="inpScale" type="number" step="0.1" />
+          </div>
+        </div>
+
+        <div class="inspector-block">
+          <div class="block-title">Render</div>
+
+          <div class="field">
+            <label>Shape</label>
+            <select id="inpShape">
+              <option value="rect">Rect</option>
+              <option value="circle">Circle</option>
+              <option value="cross">Cross</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Size</label>
+            <input id="inpSize" type="number" step="1" />
+          </div>
+        </div>
+
+        <div class="inspector-actions">
+          <button class="danger-btn" id="deleteEntityBtn">Delete Selected</button>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+</div>
+
+<footer class="bottom-bar">
+  <span id="statusText">Status: Ready</span>
+  <span>Void Engine Editor</span>
+</footer>
+
+<script src="js/editor.js"></script>
+</body>
+</html>
