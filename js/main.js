@@ -2,22 +2,28 @@ createProjectBtn.onclick = openModal;
 heroCreateBtn.onclick = openModal;
 cancelBtn.onclick = closeModal;
 
+function validateNumberInput(value, fallback) {
+    const num = Number(value);
+    return Number.isFinite(num) && num > 0 ? num : fallback;
+}
+
 confirmBtn.onclick = () => {
+    const projectNameValue = projectName.value.trim();
+    if (!projectNameValue) return;
+
     const project = {
         id: crypto.randomUUID(),
-        name: projectName.value.trim(),
+        name: projectNameValue,
         type: projectType.value,
         platform: projectPlatform.value,
-        width: +canvasWidth.value,
-        height: +canvasHeight.value,
-        createdAt: Date.now()
+        width: validateNumberInput(canvasWidth.value, 1280),
+        height: validateNumberInput(canvasHeight.value, 720),
     };
 
-    if (!project.name) return;
-
-    addProject(project);
+    const savedProject = addProject(project);
     closeModal();
     renderProjects();
+    setLastProject(savedProject.id);
 };
 
 searchInput.oninput = e =>

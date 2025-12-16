@@ -26,7 +26,7 @@ function renderProjects(filter = "", sort = "date") {
     if (sort === "name") {
         projects.sort((a, b) => a.name.localeCompare(b.name));
     } else {
-        projects.reverse();
+        projects.sort((a, b) => (b.createdAt ?? 0) - (a.createdAt ?? 0));
     }
 
     projectsGrid.innerHTML = "";

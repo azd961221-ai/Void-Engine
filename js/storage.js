@@ -2,7 +2,12 @@ const STORAGE_KEY = "void_projects";
 const LAST_PROJECT_KEY = "void_last_project";
 
 function getProjects() {
-    return JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
+    try {
+        return JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
+    } catch (err) {
+        console.error("Failed to parse projects", err);
+        return [];
+    }
 }
 
 function saveProjects(projects) {
@@ -11,8 +16,14 @@ function saveProjects(projects) {
 
 function addProject(project) {
     const projects = getProjects();
-    projects.push(project);
+    const normalized = {
+        createdAt: Date.now(),
+        ...project,
+    };
+    projects.push(normalized);
     saveProjects(projects);
+    setLastProject(normalized.id);
+    return normalized;
 }
 
 function setLastProject(id) {
