@@ -35,6 +35,12 @@ const SCENE_KEY = `void_scene_${projectId}`;
 // =========================
 let GRID_SIZE = 50;
 
+function sanitizeGridSize(value) {
+  const parsed = Number(value);
+  if (!Number.isFinite(parsed) || parsed <= 0) return 50;
+  return parsed;
+}
+
 let entities = [
   { id: uid(), name: "Main Camera", tag: "Camera", enabled: true, transform: { x: 0, y: 0, rot: 0, scale: 1 }, render: { shape: "cross", size: 24 } },
   { id: uid(), name: "Player", tag: "Player", enabled: true, transform: { x: 120, y: 40, rot: 0, scale: 1 }, render: { shape: "rect", size: 40 } },
@@ -148,7 +154,9 @@ function updateHUD() {
   hudCam.textContent = `Cam: ${Math.round(camera.x)}, ${Math.round(camera.y)}`;
   hudMode.textContent = `Gizmo: ${gizmoMode === GizmoMode.MOVE ? "Move" : "Rotate"}`;
   hudSpace.textContent = `Space: ${gizmoSpace === GizmoSpace.WORLD ? "World" : "Local"}`;
-  hudSnap.textContent = `Snap: ${GRID_SIZE}${ctrlDown ? " (Ctrl)" : ""}`;
+  const grid = sanitizeGridSize(GRID_SIZE);
+  GRID_SIZE = grid;
+  hudSnap.textContent = `Snap: ${grid}${ctrlDown ? " (Ctrl)" : ""}`;
 
   const sel = getSelectedEntities();
   if (sel.length === 0) hudSel.textContent = "Selected: —";
@@ -500,7 +508,7 @@ deleteEntityBtn.addEventListener("click", () => {
 // Grid size selector
 // =========================
 gridSnapSelect.addEventListener("change", () => {
-  GRID_SIZE = Number(gridSnapSelect.value);
+  GRID_SIZE = sanitizeGridSize(gridSnapSelect.value);
   saveSceneLocal(true);
   setStatus(`Grid: ${GRID_SIZE}`);
 });
@@ -618,7 +626,8 @@ function drawGrid() {
   ctx.translate(w / 2 + camera.x, h / 2 + camera.y);
   ctx.scale(camera.zoom, camera.zoom);
 
-  const grid = GRID_SIZE;
+  const grid = sanitizeGridSize(GRID_SIZE);
+  GRID_SIZE = grid;
   const halfW = w / camera.zoom;
   const halfH = h / camera.zoom;
 
@@ -1129,7 +1138,8 @@ function loop() {
   if (loaded) logConsole("info", "Loaded scene from localStorage.");
   else logConsole("info", "New scene created (default).");
 
-  GRID_SIZE = Number(gridSnapSelect.value);
+  GRID_SIZE = sanitizeGridSize(gridSnapSelect?.value ?? GRID_SIZE);
+  if (gridSnapSelect) gridSnapSelect.value = String(GRID_SIZE);
   saveSceneLocal(true);
 
   renderHierarchy();
