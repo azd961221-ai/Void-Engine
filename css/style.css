@@ -1,0 +1,272 @@
+:root {
+    --bg-main: #0b0d12;
+    --bg-panel: #121522;
+    --bg-item: #1a1f33;
+    --accent: #5b7cfa;
+    --text-main: #eef0f6;
+    --text-muted: #8f95b2;
+}
+
+* {
+    box-sizing: border-box;
+    font-family: "Inter", "Segoe UI", system-ui, sans-serif;
+}
+
+body {
+    margin: 0;
+    height: 100vh;
+    display: flex;
+    background:
+        radial-gradient(800px at 30% -10%, #1a2040, transparent),
+        #0b0d12;
+    color: var(--text-main);
+}
+
+/* SIDEBAR */
+.sidebar {
+    width: 260px;
+    background: linear-gradient(180deg, #14182a, #0f1220);
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    border-right: 1px solid #1f2440;
+}
+
+.engine-title {
+    font-size: 28px;
+    font-weight: 800;
+    letter-spacing: 4px;
+}
+
+.engine-subtitle {
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-bottom: 30px;
+}
+
+.nav {
+    margin-bottom: 24px;
+}
+
+.nav-item {
+    padding: 10px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    margin-bottom: 4px;
+}
+
+.nav-item.active {
+    background-color: var(--bg-item);
+}
+
+.nav-item.disabled {
+    color: #555;
+    cursor: not-allowed;
+}
+
+.stats {
+    font-size: 13px;
+    color: var(--text-muted);
+    margin-top: auto;
+    margin-bottom: 20px;
+    line-height: 1.6;
+}
+
+.create-btn {
+    padding: 12px;
+    background-color: var(--accent);
+    border: none;
+    border-radius: 8px;
+    color: white;
+    cursor: pointer;
+}
+
+/* MAIN */
+.main {
+    flex: 1;
+    padding: 32px;
+    overflow-y: auto;
+}
+
+/* HERO */
+.hero {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: linear-gradient(145deg, #1a2040, #14182a);
+    border: 1px solid #2a2f55;
+    border-radius: 16px;
+    padding: 24px;
+    margin-bottom: 24px;
+}
+
+.hero h1 {
+    margin: 0;
+    font-size: 26px;
+}
+
+.hero p {
+    margin: 6px 0 0;
+    color: var(--text-muted);
+}
+
+.hero-actions {
+    display: flex;
+    gap: 12px;
+}
+
+.hero-btn {
+    padding: 10px 18px;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.hero-btn.primary {
+    background-color: var(--accent);
+    color: white;
+    border: none;
+}
+
+.hero-btn.ghost {
+    background: transparent;
+    border: 1px solid #3a4080;
+    color: var(--text-main);
+}
+
+/* TOOLBAR */
+.toolbar {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.toolbar input,
+.toolbar select {
+    background-color: var(--bg-item);
+    border: 1px solid #2a2f55;
+    color: var(--text-main);
+    padding: 10px;
+    border-radius: 8px;
+}
+
+.toolbar input {
+    flex: 1;
+}
+
+/* PROJECTS */
+.projects-section h2 {
+    margin: 0 0 12px;
+}
+
+.projects-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 18px;
+}
+
+.project-card {
+    background: linear-gradient(180deg, #1a1f33, #14182a);
+    border-radius: 14px;
+    padding: 16px;
+    border: 1px solid #242a55;
+    transition: 0.25s;
+    cursor: pointer;
+    position: relative;
+}
+
+.project-card:hover {
+    transform: translateY(-4px);
+    border-color: var(--accent);
+}
+
+.project-preview {
+    height: 120px;
+    background:
+        linear-gradient(135deg, #2a2f55, #1a1f33);
+    border-radius: 10px;
+    margin-bottom: 12px;
+}
+
+.project-name {
+    font-size: 16px;
+    margin-bottom: 4px;
+}
+
+.project-meta {
+    font-size: 12px;
+    color: var(--text-muted);
+}
+
+/* EMPTY */
+.empty-state {
+    display: none;
+    text-align: center;
+    padding: 40px;
+    color: var(--text-muted);
+}
+
+/* MODAL */
+.modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.7);
+    display: none;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal.active {
+    display: flex;
+}
+
+.modal-box {
+    width: 420px;
+    background-color: var(--bg-panel);
+    border-radius: 14px;
+    padding: 24px;
+}
+
+.modal-box h3 {
+    margin-top: 0;
+}
+
+.modal label {
+    font-size: 12px;
+    color: var(--text-muted);
+}
+
+.modal input,
+.modal select {
+    width: 100%;
+    margin-bottom: 12px;
+    padding: 10px;
+    background-color: var(--bg-item);
+    border: 1px solid #2a2f55;
+    color: var(--text-main);
+    border-radius: 8px;
+}
+
+.size-row {
+    display: flex;
+    gap: 10px;
+}
+
+.modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+.btn.confirm {
+    background-color: var(--accent);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 8px 14px;
+}
+
+.btn.cancel {
+    background: transparent;
+    border: none;
+    color: var(--text-muted);
+}
